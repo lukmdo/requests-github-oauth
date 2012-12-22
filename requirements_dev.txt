@@ -1,0 +1,11 @@
+-r requirements.txt
+
+pep8
+unittest2
+# ipdb
+# ipython
+# coverage
+# readline
+# nose
+# rudolf2
+# pyflakes
