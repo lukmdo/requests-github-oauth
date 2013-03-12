@@ -1,18 +1,37 @@
 # [Requests](https://github.com/kennethreitz/requests) for [GitHub OAuth](http://developer.github.com/v3/oauth/) Helpers
 
-## Offline-Style (Non-Web Application Flow)
+## Offline/Non-Web Application Flow
 
-Fill```AUTHORIZATION_ID```, ```LOGIN``` and ```PASSWORD``` like in example:
+Set environment ```GH_USER``` and ```GH_PASSWORD``` which will be used only once at
+```Authorization``` init.
+
+### Create a new authorization
+
+List of [available scopes](http://developer.github.com/v3/oauth/#scopes) and [other authorization parameters](http://developer.github.com/v3/oauth/#create-a-new-authorization)
 
 ```python
+from requests_github_oauth import Authorization
 
+github_authorization = Authorization(scopes=['user'], note='just testing')
+github_authorization.put()
+github_authorization.data['token']
+'ACCESS_TOKEN'
+github_authorization.data['id']
+'AUTHORIZATION_ID'
+```
+
+### If you have created an authorization already:
+
+Build [Requests](http://python-requests.org) ```AuthorizedClient``` for the [GitHub API](http://developer.github.com/)
+
+```python
 from requests_github_oauth import Authorization, AuthorizedClient
 
-github_authorization = Authorization(AUTHORIZATION_ID, basic_auth=('LOGIN', 'PASSWORD'))
-client = AuthorizedClient(github_authorization)
+github_authorization = Authorization('AUTHORIZATION_ID')
+api = AuthorizedClient(github_authorization)
 
-# ...life goes on
-r = client.get('https://api.github.com/user/repos')
-pp([r.status_code, r.json])
-
+# use api client helper to make api calls
+r = api.get('/user')
+assert r.status_code == 200
+assert 'login' in r.json()
 ```

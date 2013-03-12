@@ -7,9 +7,9 @@ class TestFoo(unittest.TestCase):
         github_authorization = Authorization(850974)
         client = AuthorizedClient(github_authorization)
 
-        r = client.get('https://api.github.com/user/repos')
-        self.assertEqual(200, r.status_code)
-
+        r = client.get('/user')
+        self.assertEqual(r.status_code, 200)
+        self.assertIn('login', r.json())
 
 if __name__ == '__main__':
     unittest.main()
